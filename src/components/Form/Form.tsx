@@ -22,7 +22,28 @@ const Form = () => {
 		return setBmi((bmiVal = parseFloat(bmiVal.toFixed(1))));
 	};
 
-	const handleToggle = () => {};
+	const handleToggle = (e: React.MouseEvent<HTMLAnchorElement>) => {
+		e.preventDefault();
+		setToggleMetric(!toggleMetric);
+	};
+
+	const handleSystem = () => {
+		return toggleMetric ? (
+			<Button
+				type="submit"
+				className="btn"
+				text="Calculate"
+				onClick={handleBmi}
+			/>
+		) : (
+			<Button
+				type="submit"
+				className="btn"
+				text="Calculate"
+				onClick={handleBmiLbIn}
+			/>
+		);
+	};
 
 	const handleBmiLbIn = () => {
 		let heightVal: number;
@@ -51,36 +72,48 @@ const Form = () => {
 		event.preventDefault();
 		setWeight("");
 		setHeight("");
+		setBmi(undefined);
 	};
 
 	return (
 		<>
 			<div className={styles["container"]}>
 				<header>BMI Calculator</header>
+				{console.log(toggleMetric)}
+
 				<form>
 					<div className={styles["height-section"]}>
 						<div className={styles["section-title"]}>Height</div>
-						<label>Meters</label>
-						<Input onChange={updateHeight} value={height} />
+						<label>{toggleMetric ? "Meters" : "Inches"}</label>
+						<Input
+							onChange={updateHeight}
+							value={height}
+							type="number"
+						/>
 					</div>
 
 					<div className={styles["weight-section"]}>
 						<div className={styles["section-title"]}>Weight</div>
-						<label>Kilograms</label>
-						<Input onChange={updateWeight} value={weight} />
+						<label>{toggleMetric ? "Kilograms" : "lbs"}</label>
+						<Input
+							onChange={updateWeight}
+							value={weight}
+							type="number"
+						/>
 					</div>
 				</form>
 				<div className={styles["results"]}>
-					<div>{isNaN(bmi as number) ? "" : bmi}</div>
-					{getBmi(bmi)}
+					<div>
+						{" "}
+						{isNaN(bmi as number) ? "" : `Your BMI is: ${bmi}`}
+					</div>
+					<div> {getBmi(bmi)} </div>
 				</div>
 				<div className={styles["btn-container"]}>
-					<Button
-						type="submit"
-						className="btn"
-						text="Calculate"
-						onClick={handleBmi}
-					/>
+					{handleSystem()}
+					<a href="/" onClick={handleToggle}>
+						{toggleMetric ? "Imperial" : "Metric"}
+					</a>
 					<a href="/" onClick={reset}>
 						Reset
 					</a>
