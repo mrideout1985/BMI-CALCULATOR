@@ -7,6 +7,7 @@ import { Input } from "../Input/Input";
 const Form = () => {
 	const [weight, setWeight] = useState("");
 	const [height, setHeight] = useState("");
+	const [toggleMetric, setToggleMetric] = useState(false);
 	const [bmi, setBmi] = useState<number>();
 
 	const handleBmi = () => {
@@ -21,6 +22,21 @@ const Form = () => {
 		return setBmi((bmiVal = parseFloat(bmiVal.toFixed(1))));
 	};
 
+	const handleToggle = () => {};
+
+	const handleBmiLbIn = () => {
+		let heightVal: number;
+		let weightVal: number;
+		let bmiVal: number | undefined;
+
+		heightVal = parseFloat(height);
+		weightVal = parseInt(weight);
+		bmiVal = 703 * (weightVal / (heightVal * heightVal));
+		console.log(bmiVal);
+
+		setBmi((bmiVal = parseFloat(bmiVal.toFixed(1))));
+	};
+
 	const updateWeight = (e: React.ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
 		setWeight(e.target.value);
@@ -31,7 +47,8 @@ const Form = () => {
 		setHeight(e.target.value);
 	};
 
-	const reset = () => {
+	const reset = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+		event.preventDefault();
 		setWeight("");
 		setHeight("");
 	};
@@ -53,7 +70,10 @@ const Form = () => {
 						<Input onChange={updateWeight} value={weight} />
 					</div>
 				</form>
-				<div className={styles["results"]}>{getBmi(bmi)}</div>
+				<div className={styles["results"]}>
+					<div>{isNaN(bmi as number) ? "" : bmi}</div>
+					{getBmi(bmi)}
+				</div>
 				<div className={styles["btn-container"]}>
 					<Button
 						type="submit"
@@ -65,6 +85,7 @@ const Form = () => {
 						Reset
 					</a>
 				</div>
+				{}
 			</div>
 		</>
 	);
